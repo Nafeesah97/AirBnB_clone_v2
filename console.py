@@ -136,7 +136,7 @@ class HBNBCommand(cmd.Cmd):
                 pass
             else:
                 param = command_line[i].split("=")
-                if (self.check_quote(param[1]) == True):
+                if (self.check_quotes(param[1]) == True):
                     argument = param[1]
                     if '_' in argument:
                         argument.replace('_', ' ')
