@@ -92,6 +92,12 @@ class HBNBCommand(cmd.Cmd):
             print('(hbnb) ', end='')
         return stop
 
+    def check_quotes(self, argument):
+        if argument.startswith('"') and argument.endswith('"'):
+            return True
+        else:
+            return False
+
     def do_quit(self, command):
         """ Method to exit the HBNB console"""
         exit()
@@ -115,13 +121,30 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, args):
         """ Create an object of any class"""
+        command_line = args.split()
+
         if not args:
             print("** class name missing **")
             return
-        elif args not in HBNBCommand.classes:
+        elif command_line[0] not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        new_instance = HBNBCommand.classes[args]()
+        new_instance = HBNBCommand.classes[command_line[0]]()
+
+        for i in range(1, len(command_line)):
+            if '=' not in command_line[i]:
+                pass
+            else:
+                param = command_line[i].split("=")
+                if (self.check_quote(param[1]) == True):
+                    argument = param[1]
+                    if '_' in argument:
+                        argument.replace('_', ' ')
+                    if '\"' in argument:
+                        argument.replace('\"', '"')
+                    new_instance.param[0] = argument[1:-1]
+                new_instance.param[0] = param[1]
+
         storage.save()
         print(new_instance.id)
         storage.save()
