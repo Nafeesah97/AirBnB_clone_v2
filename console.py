@@ -138,11 +138,11 @@ class HBNBCommand(cmd.Cmd):
                 attr = param[0]
                 val = param[1]
                 if (self.check_quotes(val) == True):
+                    val = val[1:-1]
                     if '_' in val:
                         val.replace('_', ' ')
                     if '\"' in val:
                         val.replace('\"', '"')
-                    val = val[1:-1]
                 instance_key = "{}.{}".format(command_line[0], new_instance.id)
                 instance = storage.all()[instance_key]
                 setattr(instance, attr, val)
