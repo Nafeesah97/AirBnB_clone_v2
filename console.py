@@ -135,14 +135,17 @@ class HBNBCommand(cmd.Cmd):
         for i in range(1, len(command_line)):
             if '=' in command_line[i]:
                 param = command_line[i].split("=")
-                if (self.check_quotes(param[1]) == True):
-                    argument = param[1]
-                    if '_' in argument:
-                        argument.replace('_', ' ')
-                    if '\"' in argument:
-                        argument.replace('\"', '"')
-                    new_instance.param[0] = argument[1:-1]
-                new_instance.param[0] = param[1]
+                attr = param[0]
+                val = param[1]
+                if (self.check_quotes(val) == True):
+                    if '_' in val:
+                        val.replace('_', ' ')
+                    if '\"' in val:
+                        val.replace('\"', '"')
+                    val = val[1:-1]
+                instance_key = "{}.{}".format(command_line[0], new_instance.id)
+                instance = storage.all()[instance_key]
+                setattr(instance, attr, val)
             else:
                 pass
         storage.save()
