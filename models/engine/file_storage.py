@@ -59,4 +59,4 @@ class FileStorage:
             pass
         else:
             if (self.__objects.keys() == obj):
-                del self.__objects[obj]
+                del self.__objects[obj.__class__.__name__.obj.id]
