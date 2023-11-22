@@ -130,11 +130,10 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
             return
         new_instance = HBNBCommand.classes[command_line[0]]()
-
+        storage.save()
+        print(new_instance.id)
         for i in range(1, len(command_line)):
-            if '=' not in command_line[i]:
-                pass
-            else:
+            if '=' in command_line[i]:
                 param = command_line[i].split("=")
                 if (self.check_quotes(param[1]) == True):
                     argument = param[1]
@@ -144,9 +143,8 @@ class HBNBCommand(cmd.Cmd):
                         argument.replace('\"', '"')
                     new_instance.param[0] = argument[1:-1]
                 new_instance.param[0] = param[1]
-
-        storage.save()
-        print(new_instance.id)
+            else:
+                pass
         storage.save()
 
     def help_create(self):
