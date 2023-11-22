@@ -73,7 +73,7 @@ class HBNBCommand(cmd.Cmd):
                 pline = pline[2].strip()  # pline is now str
                 if pline:
                     # check for *args or **kwargs
-                    if pline[0] == '{' and pline[-1] =='}'\
+                    if pline[0] == '{' and pline[-1] == '}'\
                             and type(eval(pline)) is dict:
                         _args = pline
                     else:
@@ -95,8 +95,6 @@ class HBNBCommand(cmd.Cmd):
     def check_quotes(self, argument):
         if argument.startswith('"') and argument.endswith('"'):
             return True
-        else:
-            return False
 
     def do_quit(self, command):
         """ Method to exit the HBNB console"""
@@ -137,7 +135,7 @@ class HBNBCommand(cmd.Cmd):
                 param = command_line[i].split("=")
                 attr = param[0]
                 val = param[1]
-                if (self.check_quotes(val) == True):
+                if (self.check_quotes(val)):
                     val = val[1:-1]
                     if '_' in val:
                         val.replace('_', ' ')
@@ -343,6 +341,7 @@ class HBNBCommand(cmd.Cmd):
         """ Help information for the update class """
         print("Updates an object with new information")
         print("Usage: update <className> <id> <attName> <attVal>\n")
+
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
