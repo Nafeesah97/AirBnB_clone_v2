@@ -3,9 +3,13 @@
 To create database storage
 """
 import os
-from sqlalchemy import (create_engine)
+from sqlalchemy import (create_engine, text)
 from sqlalchemy.orm import sessionmaker, scoped_session
 from models.city import City
+from models.place import Place
+from models.review import Review
+from models.amenity import Amenity
+from models.user import User
 from models.state import State
 from models.base_model import Base
 class DBStorage():
@@ -33,18 +37,23 @@ class DBStorage():
 
     def all(self, cls=None):
         """all objects depending of the class name"""
+        classes = {"State": State, "City": City}
         res = {}
-        tables = ['User', 'State', 'City', 'Amenity', 'Place', 'Review']
+
         if cls == None:
-            for i in range(len(tables)):
-                query = self.__session.query(tables[i]).all()
+            for i,j in classes.items():
+                query = self.__session.query(j).all()
                 for objs in query:
-                    keys = tables[i].to_dict()['__class__'] + '.' + tables[i].id 
+                    keys = objs.__class__.__name__ + '.' + objs.id 
                     res[keys] = objs
+        
+        elif cls not in classes.values():
+            return res
+
         else:
             query = self.__session.query(cls).all()
             for objs in query:
-                keys = cls.to_dict()['__class__'] + '.' + cls.id 
+                keys = objs.__class__.__name__ + '.' + objs.id 
                 res[keys] = objs
         
         return res

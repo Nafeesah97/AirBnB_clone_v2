@@ -127,9 +127,7 @@ class HBNBCommand(cmd.Cmd):
         elif command_line[0] not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        new_instance = HBNBCommand.classes[command_line[0]]()
-        storage.save()
-        print(new_instance.id)
+        a_dict = {}
         for i in range(1, len(command_line)):
             if '=' in command_line[i]:
                 param = command_line[i].split("=")
@@ -141,12 +139,12 @@ class HBNBCommand(cmd.Cmd):
                         val = val.replace('_', ' ')
                     if '\"' in val:
                         val = val.replace('\"', '"')
-                instance_key = "{}.{}".format(command_line[0], new_instance.id)
-                instance = storage.all()[instance_key]
-                setattr(instance, attr, val)
+                a_dict[attr] = val
             else:
                 pass
+        new_instance = HBNBCommand.classes[command_line[0]](**a_dict)
         storage.save()
+        print(new_instance.id)
 
     def help_create(self):
         """ Help information for the create method """
@@ -228,11 +226,11 @@ class HBNBCommand(cmd.Cmd):
             if args not in HBNBCommand.classes:
                 print("** class doesn't exist **")
                 return
-            for k, v in storage._FileStorage__objects.items():
+            for k, v in storage.all().items():
                 if k.split('.')[0] == args:
                     print_list.append(str(v))
         else:
-            for k, v in storage._FileStorage__objects.items():
+            for k, v in storage.all().items():
                 print_list.append(str(v))
 
         print(print_list)
@@ -245,7 +243,7 @@ class HBNBCommand(cmd.Cmd):
     def do_count(self, args):
         """Count current number of class instances"""
         count = 0
-        for k, v in storage._FileStorage__objects.items():
+        for k, v in storage.all().items():
             if args == k.split('.')[0]:
                 count += 1
         print(count)
