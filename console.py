@@ -127,7 +127,9 @@ class HBNBCommand(cmd.Cmd):
         elif command_line[0] not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        a_dict = {}
+        new_instance = HBNBCommand.classes[command_line[0]]()
+        storage.save()
+        print(new_instance.id)
         for i in range(1, len(command_line)):
             if '=' in command_line[i]:
                 param = command_line[i].split("=")
@@ -139,12 +141,12 @@ class HBNBCommand(cmd.Cmd):
                         val = val.replace('_', ' ')
                     if '\"' in val:
                         val = val.replace('\"', '"')
-                a_dict[attr] = val
+                instance_key = "{}.{}".format(command_line[0], new_instance.id)
+                instance = storage.all()[instance_key]
+                setattr(instance, attr, val)
             else:
                 pass
-        new_instance = HBNBCommand.classes[command_line[0]](**a_dict)
         storage.save()
-        print(new_instance.id)
 
     def help_create(self):
         """ Help information for the create method """
