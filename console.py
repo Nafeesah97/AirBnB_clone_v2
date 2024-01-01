@@ -119,35 +119,25 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, args):
         """ Create an object of any class"""
-        command_line = args.split()
-
-        if not args:
+        try:
+            if not args:
+                raise SyntaxError()
+            arg_list = args.split(" ")
+            kw = {}
+            for arg in arg_list[1:]:
+                arg_splited = arg.split("=")
+                arg_splited[1] = eval(arg_splited[1])
+                if type(arg_splited[1]) is str:
+                    arg_splited[1] = arg_splited[1].replace("_", " ").replace('"', '\\"')
+                kw[arg_splited[0]] = arg_splited[1]
+        except SyntaxError:
             print("** class name missing **")
-            return
-        elif command_line[0] not in HBNBCommand.classes:
+        except NameError:
             print("** class doesn't exist **")
-            return
-        new_instance = HBNBCommand.classes[command_line[0]]()
-        storage.save()
+        new_instance = HBNBCommand.classes[arg_list[0]](**kw)
+        new_instance.save()
         print(new_instance.id)
-        for i in range(1, len(command_line)):
-            if '=' in command_line[i]:
-                param = command_line[i].split("=")
-                attr = param[0]
-                val = param[1]
-                if (self.check_quotes(val)):
-                    val = val[1:-1]
-                    if '_' in val:
-                        val.replace('_', ' ')
-                    if '\"' in val:
-                        val.replace('\"', '"')
-                instance_key = "{}.{}".format(command_line[0], new_instance.id)
-                instance = storage.all()[instance_key]
-                setattr(instance, attr, val)
-            else:
-                pass
-        storage.save()
-
+        
     def help_create(self):
         """ Help information for the create method """
         print("Creates a class of any type")
