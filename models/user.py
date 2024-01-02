@@ -2,7 +2,6 @@
 """This module defines a class User"""
 from os import getenv
 from models.base_model import BaseModel, Base
-from models import hbnb_type_storage
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
 from models.place import Place
