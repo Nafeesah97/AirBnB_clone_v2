@@ -144,29 +144,43 @@ class HBNBCommand(cmd.Cmd):
         if not args:
             print("** class name missing **")
             return
-        elif command_line[0] not in HBNBCommand.classes:
+
+        # Split the arguments into class name and parameters
+        class_and_params = args.split(' ', 1)
+        class_name = class_and_params[0]
+
+        if class_name not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        new_instance = HBNBCommand.classes[command_line[0]]()
+
+        # Check if parameters are provided
+        if len(class_and_params) < 2:
+            print("** parameters missing **")
+            return
+
+        # Parse and process the parameters
+        params = class_and_params[1].split()
+        obj_params = {}
+        for param in params:
+            # Split key-value pairs
+            key, value = param.split('=')
+
+            # Remove double quotes and replace underscores with spaces in the value
+            value = value.strip('\"').replace('_', ' ')
+
+            # Convert the value to the appropriate type if specified in HBNBCommand.types
+            if key in HBNBCommand.types:
+                value = HBNBCommand.types[key](value)
+
+            # Add the key-value pair to the obj_params dictionary
+            obj_params[key] = value
+
+        # Create an instance of the specified class with the parsed parameters
+        new_instance = HBNBCommand.classes[class_name](**obj_params)
         storage.save()
         print(new_instance.id)
-        for i in range(1, len(command_line)):
-            if '=' in command_line[i]:
-                param = command_line[i].split("=")
-                attr = param[0]
-                val = param[1]
-                if (self.check_quotes(val)):
-                    val = val[1:-1]
-                    if '_' in val:
-                        val.replace('_', ' ')
-                    if '\"' in val:
-                        val.replace('\"', '"')
-                instance_key = "{}.{}".format(command_line[0], new_instance.id)
-                instance = storage.all()[instance_key]
-                setattr(instance, attr, val)
-            else:
-                pass
         storage.save()
+
 
 
     def help_create(self):
