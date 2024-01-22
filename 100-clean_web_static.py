@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """ Function that deploys """
-from fabric.api import run, local
+from fabric.api import run, local, env
 
 
 env.hosts = ['52.91.202.165', '52.87.222.58']
