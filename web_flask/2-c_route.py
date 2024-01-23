@@ -20,7 +20,7 @@ def hbnb():
 def c_text(text):
     """uses variables"""
     dis_text = text.replace('_', ' ')
-    return f'C {dis_text}'
+    return 'C {}'.format(dis_text)
 
 
 if __name__ == '__main__':
