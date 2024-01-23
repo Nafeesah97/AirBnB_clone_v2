@@ -22,9 +22,9 @@ def c_text(text):
     dis_text = text.replace('_', ' ')
     return 'C {}'.format(dis_text)
 
-
+@app.route('/python', strict_slashes=False)
 @app.route('/python/<text>', strict_slashes=False)
-def python_test(text='is cool'):
+def python_text(text='is cool'):
     """uses variables"""
     dis_text = text.replace('_', ' ')
     return 'Python {}'.format(dis_text)
